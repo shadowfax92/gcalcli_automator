@@ -27,16 +27,35 @@ Type 2:
 - Task 2: "3pm to 4pm"
 - Task 3: "8pm to 9pm"'''
 
+    create_file = True
+    if os.path.exists(YAML_CONFIG_FILE):
+        print 'Yaml config file already exists. Do you want to override it? (y/n)'
+        ans = raw_input()
+        if ans == 'y' or ans == 'yes':
+            create_file = True
+        else:
+            create_file = False
+            logging.info('Not creating yaml config file. Current config is as below')
+            print_config_content(YAML_CONFIG_FILE)
 
-    fh = open(YAML_CONFIG_FILE, 'w+')
-    fh.write(init_data)
-    fh.close()
-    logging.info('config file initialzed at ' + YAML_CONFIG_FILE)
+    if create_file:
+        fh = open(YAML_CONFIG_FILE, 'w+')
+        fh.write(init_data)
+        fh.close()
+        logging.info('config file initialzed at ' + YAML_CONFIG_FILE)
+
 
 def execute_cmd(cmd):
     print 'Executing command: ', cmd
     os.system(cmd)
 
+
+def print_config_content(file_name):
+    os.system('cat ' + file_name)
+
+
+def open_file_edit(file_name):
+    os.system('%s %s' % (os.getenv('EDITOR'), file_name))
 
 def parse(file_name):
     fh = open(file_name,'Ur')
@@ -83,6 +102,8 @@ def main():
     arg_parser.add_argument("-a", "--agenda", help="print agenda", action="store_true")
     arg_parser.add_argument("-w", "--week", help="print week calendar", action="store_true")
     arg_parser.add_argument("-m", "--month", help="print month calendar", action="store_true")
+    arg_parser.add_argument("-p", "--print_file", help="display current yaml configuration file", action="store_true")
+    arg_parser.add_argument("-e", "--edit", help="open yaml config file for edit in default editor", action="store_true")
     args = arg_parser.parse_args()
 
     if args.init:
@@ -100,6 +121,10 @@ def main():
     elif args.month:
         cmd = "gcalcli calm"
         execute_cmd(cmd)
+    elif args.print_file:
+        print_config_content(YAML_CONFIG_FILE)
+    elif args.edit:
+        open_file_edit(YAML_CONFIG_FILE)
     else:
         arg_parser.print_help()
 
