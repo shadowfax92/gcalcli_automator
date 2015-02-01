@@ -102,7 +102,8 @@ def create_calendar(task_data):
     print task_data
     for task in task_data:
         for data in task:
-            cmd = 'gcalcli quick --default_reminders=\'false\' --calendar="nikhil" \'' + str(data) + ' today from ' + str(task[data]) + '\''
+            #cmd = 'gcalcli quick --default_reminders=\'false\' --calendar="nikhil" \'' + str(data) + ' today from ' + str(task[data]) + '\''
+            cmd = 'gcalcli quick --default_reminders=\'false\' --reminder=\'0 popup\' --calendar="nikhil" \'' + str(data) + ' today from ' + str(task[data]) + '\''
 
             execute_cmd(cmd)
 
